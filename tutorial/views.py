@@ -19,7 +19,7 @@ class HelloAPIView(APIView):
         return Response("Hello, world!")
     
 
-class BookListAPIView(APIView):
+class BookDetailAPIView(APIView):
     
     # Read/Retrieve All (GET) -> Get list of all books
     def get(self, request, pk):
@@ -28,7 +28,7 @@ class BookListAPIView(APIView):
         except Book.DoesNotExist:
             return Response({'error': 'book not found'}, status=status.HTTP_404_NOT_FOUND)
             
-        serializer = BookSerializer(book, many=True)
+        serializer = BookSerializer(book)               # many=True for .all()
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     
@@ -43,7 +43,7 @@ class BookListAPIView(APIView):
         serializer = BookSerializer(instance=book, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
